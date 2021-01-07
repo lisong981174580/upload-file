@@ -1,5 +1,6 @@
 const shelljs = require('shelljs');
 const path = require('path');
+const fs = require('fs');
 
 const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart();
@@ -10,7 +11,7 @@ module.exports = function (app) {
    * @param {File} file
    * @param {any} param
    */
-  app.post('/upload', multipartMiddleware, (req, res) => {
+  app.post('/upload', multipartMiddleware, async (req, res) => {
     if (
       !req.files 
         || !req.files.file 
@@ -22,11 +23,18 @@ module.exports = function (app) {
       })
     }
 
+    const targetDir = path.resolve(__dirname, `../../public`);
+    
+    if (!fs.existsSync(targetDir)) {
+      fs.mkdirSync(targetDir);
+    }
+
     shelljs.mv(
       req.files.file.path, 
-      path.resolve(__dirname, `../../public/${req.files.file.originalFilename}`)
+      path.join(targetDir, `/${req.files.file.originalFilename}`)
     );
 
     res.json(req.body);
   })
 };
+

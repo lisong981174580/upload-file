@@ -27,7 +27,13 @@ module.exports = function(app) {
  */
 async function dirEach(dir) {
   const res = [];
-  let pa = fs.readdirSync(dir);
+  let pa = [];
+
+  try {
+    pa = fs.readdirSync(dir);
+  } catch(error) {
+    return [];
+  }
 
   for (let item of pa) {
     let itemPath = path.resolve(dir + '/' + item);
