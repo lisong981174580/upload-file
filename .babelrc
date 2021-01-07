@@ -1,0 +1,5 @@
+// 配置参考：https://www.cnblogs.com/bai1218/p/12392180.html
+{
+  "presets": ["@babel/preset-env"],
+  "plugins": []
+}
