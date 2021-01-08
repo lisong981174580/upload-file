@@ -2,6 +2,7 @@ const shelljs = require('shelljs');
 const path = require('path');
 const fs = require('fs');
 
+// 处理文件的中间件，前端用 multipart/form-data
 const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart();
 
@@ -23,14 +24,19 @@ module.exports = function (app) {
       })
     }
 
+    // 使用绝对路径
     const targetDir = path.resolve(__dirname, `../../public`);
     
+    // 如果路径存在，则返回 true，否则返回 false
     if (!fs.existsSync(targetDir)) {
+      // 创建文件夹
       fs.mkdirSync(targetDir);
     }
 
     shelljs.mv(
       req.files.file.path, 
+      
+      // 规范化生成路径
       path.join(targetDir, `/${req.files.file.originalFilename}`)
     );
 
