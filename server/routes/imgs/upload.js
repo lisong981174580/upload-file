@@ -6,13 +6,13 @@ const fs = require('fs');
 const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart();
 
-module.exports = function (app) {
+module.exports = function (router) {
   /** 
    * @method 上传文件接口
    * @param {File} file
    * @param {any} param
    */
-  app.post('/upload', multipartMiddleware, async (req, res) => {
+  router.post('/', multipartMiddleware, async (req, res) => {
     if (
       !req.files 
         || !req.files.file 
@@ -42,5 +42,7 @@ module.exports = function (app) {
 
     res.json(req.body);
   })
+
+  return router;
 };
 

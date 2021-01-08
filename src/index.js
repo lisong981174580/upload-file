@@ -27,7 +27,7 @@ okBtn.onclick = function() {
   formData.append('file', file);
   formData.append('name', 'allen');
 
-  sendFormData(formData, '/upload').then(res => {
+  sendFormData(formData, '/imgs/upload').then(res => {
     queryImages();
     dialog.classList.remove('show-dialog');
   });
@@ -68,7 +68,7 @@ queryImages();
 function queryImages() {
   request({
     method: 'get',
-    url: '/select/base64'
+    url: '/imgs/select/base64'
   }).then((res = {}) => {
     imgsWrapper.innerHTML = '';
     

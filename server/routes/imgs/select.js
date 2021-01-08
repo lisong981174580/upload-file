@@ -1,12 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports = function(app) {
+module.exports = function(router) {
   /** 
    * @method 查询上传的图片
    * @return {list: string[]} 图片列表
    */
-  app.get('/select/:type', (req, res) => {
+  router.get('/:type?', (req, res) => {
     let imgs = [];
 
     if (req.params.type === 'base64') {
@@ -20,6 +20,8 @@ module.exports = function(app) {
       list: imgs,
     })
   })
+
+  return router;
 }
 
 /** 
@@ -68,4 +70,6 @@ function getImageType(str){
   var reg = /\.(png|jpg|gif|jpeg|webp)$/;
   return str.match(reg)[1];
 }
+
+
 
