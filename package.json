@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/lisong981174580/upload-file#readme",
   "dependencies": {
-    "browser-request-utils": "^1.0.6",
+    "browser-request-utils": "^1.0.7",
     "connect-multiparty": "^2.2.0",
     "express": "^4.17.1",
     "shelljs": "^0.8.4"
