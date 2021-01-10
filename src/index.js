@@ -1,4 +1,7 @@
 import { promiseAjax } from 'browser-request-utils';
+
+// 源码：https://github.com/lisong981174580/download-picture
+import downloadPicture from 'dl-pictures'; 
 import './index.less';
 
 const upload = document.querySelector('.upload');
@@ -80,36 +83,6 @@ function queryImages() {
   })
 }
 
-/**
- * @method 图片下载
- */
-const uploadImg = (src) => {
-  const image = new Image();
-
-  // 解决跨域 canvas 污染问题，加 crossOrigin = anonymous 表明想跨域获取这张图片，好用在canvas.toDataURL()上，但是服务端不一定同意，故需要服务器端支持，请求返回头部要有：Access-Control-Allow-Origin: *
-  image.setAttribute('crossOrigin', 'anonymous');
-
-  image.onload = () => {
-    const canvas = document.createElement('canvas');
-
-    canvas.width = image.width;
-    canvas.height = image.height;
-
-    const context = canvas.getContext('2d');
-    context.drawImage(image, 0, 0, image.width, image.height);
-
-    const url = canvas.toDataURL('image/png'); // 得到图片的 base64 编码数据
-    const a = document.createElement('a'); // 生成一个 a 标签
-    const event = new MouseEvent('click'); // 创建一个点击事件
-
-    a.download = new Date().getTime(); // 设置下载后的图片名称，此处使用时间戳
-    a.href = url; // 将生成的 URL 设置为 a.href 属性
-    a.dispatchEvent(event); // 触发 a 的点击事件
-  };
-
-  image.src = src;
-};
-
 /** 
  * @method 页面中插入 img
  */
@@ -120,7 +93,7 @@ function insertImgElem(imgFile) {
   img.classList.add('img');
   img.setAttribute('title', '点击下载');
   img.onclick = function() {
-    uploadImg(img.src);
+    downloadPicture(img.src);
   }
 
   const item = document.createElement('div');
