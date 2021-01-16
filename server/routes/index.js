@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 
 module.exports = function (app, router) {
+  // 读取目录内容
   const dirs = fs.readdirSync(path.resolve(__dirname)) || [];
 
   dirs.forEach(dirOrFile => {
@@ -16,6 +17,7 @@ module.exports = function (app, router) {
         // 去掉后缀的文件名
         const basename = path.basename(file, '.js');
 
+        // 采用多级路由
         app.use(`/${dirOrFile}/${basename}`, require(`./${dirOrFile}/${file}`)(router));
       })
     }

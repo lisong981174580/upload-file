@@ -5,8 +5,14 @@ const app = express();
 // 服务端解决跨域中间件，可针对单个接口跨域，也可以设置全局都支持跨域
 const allowCors = require('./middleWares/allowCors');
 
+// 设置缓存中间件
+const setCache = require('./middleWares/setCache');
+
 // 现在就可以访问 http://localhost: 3000/static，它会在浏览器中打开当前目录的 public 子目录（严格来说，是打开 public 目录的 index.html 文件）。如果public目录之中有一个图片文件 my_image.png，那么可以用 http://localhost:8080/static/my_image.png 访问该文件
-app.use('/static', allowCors, express.static(__dirname + '/public'));
+app.use('/static', allowCors, setCache({
+  // 服务端控制不使用缓存
+  'Cache-Control': 'no-store',
+}), express.static(__dirname + '/public'));
 
 // 多级路由
 const router = express.Router();
