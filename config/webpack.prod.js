@@ -1,5 +1,11 @@
 const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // 生产环境 css 拆分
+
+// 压缩 css
+const TerserJSPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+
 const webpackCommonConf = require('./webpack.common.js');
 const { merge } = require("webpack-merge");
 const { distPath } = require('./paths');
@@ -34,6 +40,27 @@ module.exports = merge(webpackCommonConf, {
             }
           }
         ]
+      },
+      {
+        test: /\.css$/,
+
+        // 多个 loader 使用 use
+        use: [
+          MiniCssExtractPlugin.loader,  // 注意，这里不再用 style-loader
+          'css-loader', 
+          'postcss-loader',
+        ],
+      },
+      {
+        test: /\.less$/,
+
+        // loader 的执行顺序：从后往前
+        use: [
+          MiniCssExtractPlugin.loader,  // 注意，这里不再用 style-loader
+          'css-loader', 
+          'postcss-loader', 
+          'less-loader',
+        ],
       }
     ]
   },
@@ -44,6 +71,19 @@ module.exports = merge(webpackCommonConf, {
     new webpack.DefinePlugin({
         // window.ENV = 'production'
         ENV: JSON.stringify('production')
-    })
-  ]
+    }),
+
+    // 抽离 css
+    new MiniCssExtractPlugin({
+      // 加 name 对于多页面开发的时候每个页面只会引入自己所需要的 css
+      filename: 'css/[name].[contenthash:8].css',
+    }),
+  ],
+  optimization: {
+    // 压缩 css
+    minimizer: [
+      new TerserJSPlugin({}), 
+      new OptimizeCSSAssetsPlugin({})
+    ],
+  }
 })

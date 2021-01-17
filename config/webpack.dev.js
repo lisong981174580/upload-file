@@ -12,6 +12,18 @@ module.exports = merge(webpackCommonConf, {
       {
         test: /\.(png|jpg|jpeg|gif)$/,
         loader: 'file-loader',
+      },
+      {
+        test: /\.css$/,
+
+        // 多个 loader 使用 use
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
+      },
+      {
+        test: /\.less$/,
+
+        // loader 的执行顺序：从后往前
+        use: ['style-loader', 'css-loader', 'postcss-loader', 'less-loader'],
       }
     ]
   },
