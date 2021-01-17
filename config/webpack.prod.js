@@ -7,7 +7,11 @@ const { distPath } = require('./paths');
 module.exports = merge(webpackCommonConf, {
   mode: 'production',
   output: {
-    filename: 'bundle.[contenthash:8].js',  // 打包代码时，加上 hash 戳
+    // 单入口
+    // filename: 'bundle.[contenthash:8].js',  // 打包代码时，加上 hash 戳
+
+    // 多入口
+    filename: '[name].[contenthash:8].js',   // name 即多入口时候 entry 的 key
     path: distPath,
   },
   module: {
