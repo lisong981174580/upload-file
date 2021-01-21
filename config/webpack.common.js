@@ -21,7 +21,14 @@ module.exports = {
         loader: 'babel-loader',
         include: srcPath,
         exclude: /node_modules/,
-      }
+      },
+      // vue 配置
+      // {
+      //   test: /\.vue$/,
+      //   loader: 'vue-loader',
+      //   include: srcPath,
+      //   exclude: /node_modules/,
+      // }
     ],
   },
   plugins: [
