@@ -21,6 +21,8 @@ module.exports = merge(webpackCommonConf, {
     // 多入口
     filename: '[name].[contenthash:8].js',   // name 即多入口时候 entry 的 key
     path: distPath,
+    publicPath: './',
+    // publicPath: 'http://cdn.abc.com'  // 修改所有静态文件 url 的前缀（如 cdn 域名），这里暂时用不到
   },
   module: {
     rules: [
@@ -47,6 +49,9 @@ module.exports = merge(webpackCommonConf, {
   
               // 打包到 img 目录下
               outputPath: '/img1/',
+
+              // 设置图片的 cdn 地址（也可以统一在外面的 output 中设置，那将作用于所有静态资源）
+              // publicPath: 'http://cdn.abc.com'
             }
           }
         ]
