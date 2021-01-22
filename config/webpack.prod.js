@@ -5,10 +5,12 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // 生产环境
 // 压缩 css
 const TerserJSPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const HappyPack = require('happypack'); // 多进程打包
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 
 const webpackCommonConf = require('./webpack.common.js');
 const { merge } = require("webpack-merge");
-const { distPath } = require('./paths');
+const { distPath, srcPath } = require('./paths');
 
 module.exports = merge(webpackCommonConf, {
   mode: 'production',
@@ -22,6 +24,14 @@ module.exports = merge(webpackCommonConf, {
   },
   module: {
     rules: [
+      // js
+      {
+        test: /\.js$/,
+        // 把对 .js 文件的处理转交给 id 为 babel 的 HappyPack 实例
+        use: ['happypack/loader?id=babel'],
+        include: srcPath,
+        // exclude: /node_modules/
+      },
       // 图片 - 考虑 base64 编码的情况
       {
         test: /\.(png|jpg|jpeg|gif)$/,
@@ -78,7 +88,43 @@ module.exports = merge(webpackCommonConf, {
       // 加 name 对于多页面开发的时候每个页面只会引入自己所需要的 css
       filename: 'css/[name].[contenthash:8].css',
     }),
+
+    // 忽略 moment 下的 /locale 目录
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/locale$/,
+      contextRegExp: /moment$/
+    }),
+
+    // happyPack 开启多进程打包
+    new HappyPack({
+        // 用唯一的标识符 id 来代表当前的 HappyPack 是用来处理一类特定的文件
+        id: 'babel',
+        
+        // 如何处理 .js 文件，用法和 Loader 配置中一样
+        loaders: ['babel-loader?cacheDirectory']
+    }),
+
+    // 使用 ParallelUglifyPlugin 并行压缩输出的 JS 代码
+    new ParallelUglifyPlugin({
+      // 传递给 UglifyJS 的参数
+      //（还是使用 UglifyJS 压缩，只不过帮助开启了多进程）
+      uglifyJS: {
+          output: {
+              beautify: false, // 最紧凑的输出
+              comments: false, // 删除所有的注释
+          },
+          compress: {
+              // 删除所有的 `console` 语句，可以兼容ie浏览器
+              drop_console: true,
+              // 内嵌定义了但是只用到一次的变量
+              collapse_vars: true,
+              // 提取出出现多次但是没有定义成变量去引用的静态值
+              reduce_vars: true,
+          }
+      }
+    })
   ],
+
   optimization: {
     // 压缩 css
     minimizer: [

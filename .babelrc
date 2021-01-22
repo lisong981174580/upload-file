@@ -1,6 +1,6 @@
 // 配置参考：https://www.cnblogs.com/bai1218/p/12392180.html
 // @babel/preset-react：https://www.babeljs.cn/docs/babel-preset-react
 {
-  "presets": ["@babel/preset-react"],
+  "presets": ["@babel/preset-env", "@babel/preset-react"],
   "plugins": []
 }

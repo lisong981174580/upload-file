@@ -14,14 +14,14 @@ module.exports = {
 
   module: {
     rules: [
-      {
-        test: /\.js$/,
+      // {
+      //   test: /\.js$/,
 
-        // 单个 loader 使用 loader 属性，另外要装 @babel/core、@babel/preset-env 同时配置 .babelrc 文件
-        loader: 'babel-loader',
-        include: srcPath,
-        exclude: /node_modules/,
-      },
+      //   // 单个 loader 使用 loader 属性，另外要装 @babel/core、@babel/preset-env 同时配置 .babelrc 文件
+      //   loader: 'babel-loader',
+      //   include: srcPath,
+      //   exclude: /node_modules/,
+      // },
       // vue 配置
       // {
       //   test: /\.vue$/,
